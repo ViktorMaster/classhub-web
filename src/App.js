@@ -6,6 +6,7 @@ import Subjects from './Components/Main/Subjects.js';
 import Tasks from './Components/Main/Tasks.js';
 import Users from './Components/Main/Users.js';
 import Registration from './Components/Main/Registration.js';
+import Form from './Components/Main/Form.js';
 import { Routes, Route } from 'react-router-dom';
 
 const ROLES = {
@@ -31,9 +32,8 @@ function App() {
 
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />} >
             <Route path='/registration' element={<Registration />} />
+            <Route path='/subjects/add' element={<Form to='subject' />} />
         </Route>
-
-
     </Routes>
   );
 }

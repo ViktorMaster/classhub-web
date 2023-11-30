@@ -1,4 +1,3 @@
-import './Auth.css'
 import { useState, useEffect } from 'react';
 import { AtOutline, LockClosedOutline } from 'react-ionicons';
 import axios from '../../api/axios';

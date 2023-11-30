@@ -11,62 +11,65 @@ function Subjects() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    let role = '';
+    const role = useRef(jwtDecode(Cookies.get('jwt')).roles) ;
 
-    useEffect(() => {
-        let isMounted = true;
+//    useEffect(() => {
+//        let isMounted = true;
+//
+//        const getSubjects = async () => {
+//            try {
+//                const decoded = jwtDecode(Cookies.get('jwt'));
+//                role.current = decoded.roles;
+//                if (role.current  === 'ROLE_ADMINISTRATOR') {
+//                    const response = await axiosPrivate.get(`/teaching-subjects`);
+//                    isMounted && setSubjects(response.data);
+//                } else if (role.current   === 'ROLE_TEACHER') {
+//                    const response = await axiosPrivate.get(`/teachers/${decoded.id}/subjects`);
+//                    isMounted && setSubjects(response.data);
+//                } else if (role.current  === 'ROLE_STUDENT') {
+//                    const response = await axiosPrivate.get(`/students/${decoded.id}/subjects`);
+//                    isMounted && setSubjects(response.data);
+//                } else {
+//                    navigate('/sign-in', { state: { from: location }, replace: true });
+//                }
+//            } catch (err) {
+//                navigate('/sign-in', { state: { from: location }, replace: true });
+//            }
+//        }
+//
+//        getSubjects();
+//        return () => {
+//            isMounted = false;
+//        }
+//    }, []);
 
-        const getSubjects = async () => {
-            try {
-                const decoded = jwtDecode(Cookies.get('jwt'));
-                role = decoded.roles;
-                if (role === 'ROLE_ADMINISTRATOR') {
-                    const response = await axiosPrivate.get(`/teaching-subjects`);
-                    isMounted && setSubjects(response.data);
-                } else if (role  === 'ROLE_TEACHER') {
-                    const response = await axiosPrivate.get(`/teachers/${decoded.id}/subjects`);
-                    isMounted && setSubjects(response.data);
-                } else if (role === 'ROLE_STUDENT') {
-                    const response = await axiosPrivate.get(`/students/${decoded.id}/subjects`);
-                    isMounted && setSubjects(response.data);
-                } else {
-                    console.error("aaaaaaaaaaaaab");
-                    navigate('/sign-in', { state: { from: location }, replace: true });
-                }
-            } catch (err) {
-                console.error(err);
-                navigate('/sign-in', { state: { from: location }, replace: true });
-            }
-        }
+    const addSubject = async () => {
 
-        getSubjects();
+    };
 
-        return () => {
-            isMounted = false;
-        }
-    }, []);
 
     return (
         <div className='container'>
             <table>
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                    </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    {role.current === 'ROLE_ADMINISTRATOR' && <th>Additional Column</th>}
+                </tr>
                 </thead>
                 <tbody>
-                    {subjects.map((subject) =>
-                        <tr>
-                            <td>{subject.name}</td>
-                            <td>{subject.description}</td>
-                            if (role === 'ROLE_ADMINISTRATOR') {
-                                <td>AAAAAAAAAAAA</td>
-                            }
-                        </tr>
-                    )}
+                    {subjects.map((subject) => (
+                    <tr key={subject.id}>
+                        <td>{subject.name}</td>
+                        <td>{subject.description}</td>
+                        <td>{subject.year}</td>
+                        <td>{subject.semester}</td>
+                    </tr>
+                ))}
                 </tbody>
             </table>
+            { role.current  === 'ROLE_ADMINISTRATOR' && <button>Add</button> }
         </div>
     );
 }
