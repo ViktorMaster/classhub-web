@@ -2,6 +2,7 @@ import './Auth.css'
 import { useState, useEffect } from 'react';
 import { AtOutline, LockClosedOutline } from 'react-ionicons';
 import axios from '../../api/axios';
+import { Link } from 'react-router-dom';
 
 function SignUp() {
     const [username, setUsername] = useState('');
@@ -11,6 +12,10 @@ function SignUp() {
     useEffect(() => {
         setErrMsg('');
     }, [username, password]);
+
+    useEffect(() => {
+        document.title = "Sign Up";
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,7 +28,11 @@ function SignUp() {
                                               });
             console.log(response.data);
         } catch (err) {
-            setErrMsg(err.message);
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else {
+                setErrMsg(err.response?.message);
+            }
         }
     };
 
@@ -44,7 +53,7 @@ function SignUp() {
                 </div>
                 <button>Sign up</button>
                 <div className='register'>
-                    <p>Already have an account? <a href='localhost:3000'>Sign In</a></p>
+                    <p>Already have an account? <Link to='/sign-in'>Sign In</Link></p>
                 </div>
             </form>
         </section>
