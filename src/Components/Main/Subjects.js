@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useRef } from 'react';
 
 function Subjects() {
     const [subjects, setSubjects] = useState([]);
@@ -10,18 +11,28 @@ function Subjects() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    let role = '';
+
     useEffect(() => {
         let isMounted = true;
-        const controller = new AbortController();
 
         const getSubjects = async () => {
             try {
-                const userId = jwtDecode(Cookies.get('jwt').id);
-                const response = await axiosPrivate.get(`/${userId}/subjects`, {
-                    signal: controller.signal
-                });
-                console.log(response.data);
-                isMounted && setSubjects(response.data);
+                const decoded = jwtDecode(Cookies.get('jwt'));
+                role = decoded.roles;
+                if (role === 'ROLE_ADMINISTRATOR') {
+                    const response = await axiosPrivate.get(`/teaching-subjects`);
+                    isMounted && setSubjects(response.data);
+                } else if (role  === 'ROLE_TEACHER') {
+                    const response = await axiosPrivate.get(`/teachers/${decoded.id}/subjects`);
+                    isMounted && setSubjects(response.data);
+                } else if (role === 'ROLE_STUDENT') {
+                    const response = await axiosPrivate.get(`/students/${decoded.id}/subjects`);
+                    isMounted && setSubjects(response.data);
+                } else {
+                    console.error("aaaaaaaaaaaaab");
+                    navigate('/sign-in', { state: { from: location }, replace: true });
+                }
             } catch (err) {
                 console.error(err);
                 navigate('/sign-in', { state: { from: location }, replace: true });
@@ -32,22 +43,27 @@ function Subjects() {
 
         return () => {
             isMounted = false;
-            controller.abort();
         }
     }, []);
 
-    console.log(subjects)
     return (
         <div className='container'>
             <table>
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     {subjects.map((subject) =>
-                        <tr><td>{subject.name}</td></tr>
+                        <tr>
+                            <td>{subject.name}</td>
+                            <td>{subject.description}</td>
+                            if (role === 'ROLE_ADMINISTRATOR') {
+                                <td>AAAAAAAAAAAA</td>
+                            }
+                        </tr>
                     )}
                 </tbody>
             </table>

@@ -12,9 +12,11 @@ function RequireAuth({ allowedRoles }) {
         } else if (jwtDecode(token)?.sub) {
             return <Navigate to='/unauthorized' state={{ from: location }} replace />;
         } else {
+            console.error("aaaaaaaaaaaaaaaaaaa");
             return <Navigate to='/sign-in' state={{ from: location }} replace />;
         }
-    } catch {
+    } catch(err) {
+        console.error(err);
         return <Navigate to='/sign-in' state={{ from: location }} replace />;
     }
 }

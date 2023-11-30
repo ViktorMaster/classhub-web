@@ -30,7 +30,7 @@ function SignIn() {
                                               {
                                                 headers: { 'Content-Type': 'application/json' }
                                               });
-            Cookies.set('token', response.data.jwt, { expires: 7, secure: true });
+            Cookies.set('jwt', response.data.token, { expires: 7, secure: true });
             setUsername('');
             setPassword('');
             navigate(from, { replace: true});
