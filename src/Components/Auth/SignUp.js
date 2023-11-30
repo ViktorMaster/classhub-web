@@ -23,10 +23,11 @@ function SignUp() {
             const response = await axios.post('/auth/sign-up',
                                               JSON.stringify({ username: username, pwd: password}),
                                               {
-                                                headers: { 'Content-Type': 'application/json' },
-                                                withCredentials: true
+                                                headers: { 'Content-Type': 'application/json' }
                                               });
             console.log(response.data);
+            setUsername('');
+            setPassword('');
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
