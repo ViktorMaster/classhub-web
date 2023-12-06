@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
+import { useState, useEffect, useRef } from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useRef } from 'react';
+import { useNavigate, useLocation, Link, useOutletContext } from 'react-router-dom';
+import { PersonAddOutline } from 'react-ionicons'
 
 function Subjects() {
     const [subjects, setSubjects] = useState([]);
@@ -11,66 +9,67 @@ function Subjects() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const role = useRef(jwtDecode(Cookies.get('jwt')).roles) ;
+    const role = useOutletContext()?.role;
+    const id = useOutletContext()?.id;
+    const isAdmin = role === 'ROLE_ADMINISTRATOR';
 
-//    useEffect(() => {
-//        let isMounted = true;
-//
-//        const getSubjects = async () => {
-//            try {
-//                const decoded = jwtDecode(Cookies.get('jwt'));
-//                role.current = decoded.roles;
-//                if (role.current  === 'ROLE_ADMINISTRATOR') {
-//                    const response = await axiosPrivate.get(`/teaching-subjects`);
-//                    isMounted && setSubjects(response.data);
-//                } else if (role.current   === 'ROLE_TEACHER') {
-//                    const response = await axiosPrivate.get(`/teachers/${decoded.id}/subjects`);
-//                    isMounted && setSubjects(response.data);
-//                } else if (role.current  === 'ROLE_STUDENT') {
-//                    const response = await axiosPrivate.get(`/students/${decoded.id}/subjects`);
-//                    isMounted && setSubjects(response.data);
-//                } else {
-//                    navigate('/sign-in', { state: { from: location }, replace: true });
-//                }
-//            } catch (err) {
-//                navigate('/sign-in', { state: { from: location }, replace: true });
-//            }
-//        }
-//
-//        getSubjects();
-//        return () => {
-//            isMounted = false;
-//        }
-//    }, []);
+    useEffect(() => {
+        let isMounted = true;
 
-    const addSubject = async () => {
+        const getSubjects = async () => {
+            try {
+                if (role  === 'ROLE_ADMINISTRATOR') {
+                    const response = await axiosPrivate.get(`/teaching-subjects`);
+                    isMounted && setSubjects(response.data);
+                } else if (role   === 'ROLE_TEACHER') {
+                    const response = await axiosPrivate.get(`/teachers/${id}/subjects`);
+                    isMounted && setSubjects(response.data);
+                } else if (role  === 'ROLE_STUDENT') {
+                    const response = await axiosPrivate.get(`/students/${id}/subjects`);
+                    isMounted && setSubjects(response.data);
+                } else {
+                    navigate('/sign-in', { state: { from: location }, replace: true });
+                }
+            } catch (err) {
+                navigate('/sign-in', { state: { from: location }, replace: true });
+            }
+        }
 
-    };
-
+        getSubjects();
+        return () => {
+            isMounted = false;
+        }
+    }, []);
 
     return (
-        <div className='container'>
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    {role.current === 'ROLE_ADMINISTRATOR' && <th>Additional Column</th>}
-                </tr>
-                </thead>
-                <tbody>
-                    {subjects.map((subject) => (
-                    <tr key={subject.id}>
-                        <td>{subject.name}</td>
-                        <td>{subject.description}</td>
-                        <td>{subject.year}</td>
-                        <td>{subject.semester}</td>
+        <section>
+            <div className='container'>
+                <h1>Subjects</h1>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Year</th>
+                        <th>Semester</th>
+                        {/*isAdmin && <th>Additional Column</th>*/}
                     </tr>
-                ))}
-                </tbody>
-            </table>
-            { role.current  === 'ROLE_ADMINISTRATOR' && <button>Add</button> }
-        </div>
+                    </thead>
+                    <tbody>
+                        {subjects.map((subject) => (
+                        <tr key={subject.id}>
+                            <td><Link to={`/subjects/${subject.id}/tasks`}>{subject.name}</Link></td>
+                            <td>{subject.description}</td>
+                            <td>{subject.year}</td>
+                            <td>{subject.semester}</td>
+                            {isAdmin && <td><Link to={`/subjects/${subject.id}/assign`}><PersonAddOutline /></Link></td>}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                { isAdmin && <Link to='/subjects/add'><button>Add</button></Link> }
+            </div>
+        </section>
     );
 }
 

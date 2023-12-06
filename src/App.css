@@ -6,8 +6,43 @@
 }
 body{
     display: flex;
+    min-height: 100vh;
+}
+.main {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+}
+.horizontalBlock {
+    display: flex;
+    flex-direction: row;
+}
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: 4vw;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+.sidebar svg {
+    position: relative;
+    left: 10%;
+    margin-bottom: 10px;
+    padding: 4px;
+    border-radius: 15px;
+}
+hr {
+    margin-bottom: 30px;
+    color: black;
+    background-color: black;
+    height: 2px;
+}
+.content {
+    display: flex;
     align-items: center;
     justify-content: center;
+    width: 96vw;
     min-height: 100vh;
 }
 section{
@@ -40,8 +75,8 @@ h1 {
     pointer-events: none;
     transition: all 0.5s ease-out;
 }
-input:focus ~ label,
-input:valid ~ label {
+input:valid ~ label,
+input:focus ~ label {
     top: -5px;
 }
 .inputbox input {
@@ -109,4 +144,36 @@ select {
     outline: none;
     font-size: 1rem;
     margin-bottom: 20px;
+}
+
+input[type=radio] {
+  --s: 1em;
+  --c: rgb(151, 23, 220, 1);
+
+  height: var(--s);
+  aspect-ratio: 1;
+  border: calc(var(--s)/8) solid #939393;
+  padding: calc(var(--s)/8);
+  margin-left: 20px;
+  margin-right: 5px;
+  background:
+     radial-gradient(farthest-side,var(--c) 94%,#0000)
+     50%/0 0 no-repeat content-box;
+  border-radius: 50%;
+  outline-offset: calc(var(--s)/10);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  font-size: inherit;
+  transition: .3s;
+}
+input[type=radio]:checked {
+  border-color: var(--c);
+  background-size: 100% 100%;
+}
+
+td, th {
+  padding: 5px;
+  text-align: center;
 }

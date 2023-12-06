@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react';
-import { AtOutline, LockClosedOutline } from 'react-ionicons';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 function Form ({ to }) {
-    return <TeachingSubjectForm />
+    return (
+        <div>
+            { to === 'tasks' && <TasksForm /> }
+            { to === 'teachingSubject' && <TeachingSubjectForm /> }
+            { to === 'subject' && <AddSubjectForm /> }
+            { to === 'teachingPeriod' && <AddTeachingPeriodForm /> }
+        </div>
+    );
 }
 
 function TeachingSubjectForm() {
-    const [subjects, setSubjects] = useState([{id: 1, name: 'VM'}, {id: 2, name: 'OP'}]);
-    const [teachingPeriods, setTeachingPeriods] = useState([{id: 1, year: '2022', semester: '1'}, {id: 2, year: '2022', semester: '2'}]);
+    const [subjects, setSubjects] = useState([]);
+    const [teachingPeriods, setTeachingPeriods] = useState([]);
     const [currentTeachingPeriod, setCurrentTeachingPeriod] = useState('');
     const [currentSubject, setCurrentSubject] = useState('')
     const [errMsg, setErrMsg] = useState('');
@@ -21,10 +27,8 @@ function TeachingSubjectForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log(currentSubject);
-            console.log(currentTeachingPeriod);
-            const response = await axiosPrivate.post('/teaching-subject',
-                                              JSON.stringify({ subjectId: currentSubject, teachingPeriodId: currentTeachingPeriod }));
+            await axiosPrivate.post('/teaching-subjects',
+                JSON.stringify({ subjectId: currentSubject, teachingPeriodId: currentTeachingPeriod }));
             setCurrentSubject('');
             setCurrentTeachingPeriod('');
         } catch (err) {
@@ -77,67 +81,172 @@ function TeachingSubjectForm() {
                     </select>
 
                     <button>Create</button>
+                    <div className='horizontalBlock'>
+                        <Link style={{'width': '100%'}} to='/subjects/add/subject'><button style={{'margin': '5px 3px 0 0'}}>Add subject</button></Link>
+                        <Link style={{'width': '100%'}} to='/subjects/add/teaching-period'><button style={{'margin': '5px 0 0 3px'}}>Add period</button></Link>
+                    </div>
                 </div>
             </form>
         </section>
     );
 }
 
-//function SubjectForm() {
-//    const [username, setUsername] = useState('');
-//    const [password, setPassword] = useState('');
-//    const [errMsg, setErrMsg] = useState('');
-//
-//    useEffect(() => {
-//        setErrMsg('');
-//    }, [username, password]);
-//
-//    useEffect(() => {
-//        document.title = "Add Subject";
-//    }, []);
-//
-//    const handleSubmit = async (e) => {
-//        e.preventDefault();
-//        try {
-//            const response = await axios.post('/auth/sign-up',
-//                                              JSON.stringify({ username: username, pwd: password}),
-//                                              {
-//                                                headers: { 'Content-Type': 'application/json' }
-//                                              });
-//            console.log(response.data);
-//            setUsername('');
-//            setPassword('');
-//        } catch (err) {
-//            if (!err?.response) {
-//                setErrMsg('No Server Response');
-//            } else {
-//                setErrMsg(err.response?.message);
-//            }
-//        }
-//    };
-//
-//    return (
-//        <section>
-//            <form onSubmit={handleSubmit}>
-//                <h1>Sign Up</h1>
-//                <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
-//                <div className='inputbox'>
-//
-//                    <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} required />
-//                    <label for=''>Username</label>
-//                </div>
-//                <div className='inputbox'>
-//                    <LockClosedOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'} />
-//                    <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} required />
-//                    <label for=''>Password</label>
-//                </div>
-//                <button>Sign up</button>
-//                <div className='register'>
-//                    <p>Already have an account? <Link to='/sign-in'>Sign In</Link></p>
-//                </div>
-//            </form>
-//        </section>
-//    );
-//};
+function AddSubjectForm() {
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+    const axiosPrivate = useAxiosPrivate();
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [name, description]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axiosPrivate.post('/subjects',JSON.stringify({ name, description }));
+            setName('');
+            setDescription('');
+        } catch (err) {
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else {
+                setErrMsg(err.response?.message);
+            }
+        }
+    };
+
+    return (
+        <section>
+            <form onSubmit={handleSubmit}>
+                <h1>Add Subject</h1>
+                <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
+                <div className='inputbox'>
+                    <input type='text' value={name} onChange={(e) => setName(e.target.value)} required />
+                    <label for=''>Name</label>
+                </div>
+                <div className='inputbox'>
+                    <input type='text' value={description} onChange={(e) => setDescription(e.target.value)} />
+                    <label for=''>Description</label>
+                </div>
+                <button>Add</button>
+            </form>
+        </section>
+    );
+}
+
+function AddTeachingPeriodForm() {
+    const [year, setYear] = useState('');
+    const [selectedSemester, setSelectedSemester] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+    const axiosPrivate = useAxiosPrivate();
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [year, selectedSemester]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            await axiosPrivate.post('/teaching-periods',JSON.stringify({ year: year, semester: selectedSemester }));
+            setYear('');
+            setSelectedSemester('');
+        } catch (err) {
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else {
+                setErrMsg(err.response?.message);
+            }
+        }
+    };
+
+    return (
+        <section>
+            <form onSubmit={handleSubmit}>
+                <h1>Add teaching period</h1>
+                <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
+                <div className='inputbox'>
+                    <input type='number' value={year} onChange={(e) => setYear(e.target.value)} required />
+                    <label for=''>Year</label>
+                </div>
+                <div className='horizontalBlock'>
+                    <label>Semester:</label>
+                    <label className='radio'>
+                        <input
+                            className='radio'
+                            type="radio"
+                            value='1'
+                            name='semester'
+                            checked={selectedSemester === '1'}
+                            onChange={(e) => setSelectedSemester(e.target.value)}
+                            required
+                        />
+                        <span>1</span>
+                    </label>
+                    <label className='radio'>
+                        <input
+                            className='radio'
+                            type="radio"
+                            value='2'
+                            name='semester'
+                            checked={selectedSemester === '2'}
+                            onChange={(e) => setSelectedSemester(e.target.value)}
+                        />
+                        <span>2</span>
+                    </label>
+                </div>
+                <br/>
+                <hr noshade='' />
+                <button>Add</button>
+            </form>
+        </section>
+    );
+}
+
+function TasksForm() {
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+    const axiosPrivate = useAxiosPrivate();
+    const { id } = useParams();
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [title, description]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axiosPrivate.post('/tasks',JSON.stringify({ title, description, teachingSubjectId: id }));
+            setTitle('');
+            setDescription('');
+        } catch (err) {
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else {
+                setErrMsg(err.response?.message);
+            }
+        }
+    };
+
+    return (
+        <section>
+            <form onSubmit={handleSubmit}>
+                <h1>Add Subject</h1>
+                <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
+                <div className='inputbox'>
+                    <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} required />
+                    <label for=''>Title</label>
+                </div>
+                <div className='inputbox'>
+                    <input type='text' value={description} onChange={(e) => setDescription(e.target.value)} required />
+                    <label for=''>Description</label>
+                </div>
+                <button>Add</button>
+            </form>
+        </section>
+    );
+}
 
 export default Form;

@@ -43,26 +43,28 @@ function SignIn() {
     };
 
     return (
-        <section>
-            <form onSubmit={handleSubmit}>
-                <h1>Sign In</h1>
-                <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
-                <div className='inputbox'>
-                    <AtOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'} />
-                    <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} required />
-                    <label for=''>Username</label>
-                </div>
-                <div className='inputbox'>
-                    <LockClosedOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'} />
-                    <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} required />
-                    <label for=''>Password</label>
-                </div>
-                <button>Sign In</button>
-                <div className='register'>
-                    <p>Don't have an account yet? <Link to='/sign-up'>Sign Up</Link></p>
-                </div>
-            </form>
-        </section>
+        <div className='content'>
+            <section>
+                <form onSubmit={handleSubmit}>
+                    <h1>Sign In</h1>
+                    <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
+                    <div className='inputbox'>
+                        <AtOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'} />
+                        <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} required />
+                        <label for=''>Username</label>
+                    </div>
+                    <div className='inputbox'>
+                        <LockClosedOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'} />
+                        <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        <label for=''>Password</label>
+                    </div>
+                    <button>Sign In</button>
+                    <div className='register'>
+                        <p>Don't have an account yet? <Link to='/sign-up'>Sign Up</Link></p>
+                    </div>
+                </form>
+            </section>
+        </div>
     );
 };
 

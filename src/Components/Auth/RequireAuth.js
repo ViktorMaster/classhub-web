@@ -7,8 +7,9 @@ function RequireAuth({ allowedRoles }) {
     const location = useLocation();
 
     try {
-        if (allowedRoles?.includes(jwtDecode(token)?.roles)) {
-            return <Outlet />;
+        const decoded = jwtDecode(token);
+        if (allowedRoles?.includes(decoded?.roles)) {
+            return <Outlet context={{ role: decoded?.roles, id: decoded?.id }}/>;
         } else if (jwtDecode(token)?.sub) {
             return <Navigate to='/unauthorized' state={{ from: location }} replace />;
         } else {
