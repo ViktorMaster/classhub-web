@@ -310,6 +310,7 @@ function GradeForm() {
 
         if (grade < 0) {
             setErrMsg('Grade must be a not-negative number')
+            return
         }
 
         try {
