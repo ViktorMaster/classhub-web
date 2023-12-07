@@ -122,9 +122,9 @@ function AssignToSubject() {
             for (const userId of selectedIds) {
                 const role = users.find((user) => user.id === userId).role;
                 if (role === 'ROLE_STUDENT') {
-                    await axiosPrivate.post('/students-subjects', JSON.stringify({ teachingSubjectId: id, studentId: userId}));
+                    await axiosPrivate.post('/student-subjects', JSON.stringify({ teachingSubjectId: id, studentId: userId}));
                 } else if (role === 'ROLE_TEACHER') {
-                    await axiosPrivate.post('/teaching-subject/teacher', JSON.stringify({ teacherId: userId, subjectId: id}));
+                    await axiosPrivate.post('/teaching-subjects/teacher', JSON.stringify({ teacherId: userId, subjectId: id}));
                 }
             };
             setSelectedIds([]);
