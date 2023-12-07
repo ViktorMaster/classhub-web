@@ -47,7 +47,8 @@ function SignUp() {
             } else if (err?.response?.message) {
                 setErrMsg(err.response?.message);
             } else {
-                setErrMsg(`Code: ${err.response?.code}`)
+
+                setErrMsg( err.message)
             }
         }
 
