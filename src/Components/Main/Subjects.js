@@ -34,7 +34,7 @@ function Subjects() {
                 if (!err?.response) {
                     setErrMsg('No Server Response');
                 } else {
-                    setErrMsg(err.response?.message);
+                    setErrMsg(err.message);
                 }
             }
         }

@@ -36,7 +36,7 @@ function TeachingSubjectForm() {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else {
-                setErrMsg(err.response?.message);
+                setErrMsg(err.message);
             }
         }
     };
@@ -58,7 +58,7 @@ function TeachingSubjectForm() {
                 if (!err?.response) {
                     setErrMsg('No Server Response');
                 } else {
-                    setErrMsg(err.response?.message);
+                    setErrMsg(err.message);
                 }
             }
         }
@@ -127,7 +127,7 @@ function AddSubjectForm() {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else {
-                setErrMsg(err.response?.message);
+                setErrMsg(err.message);
             }
         }
     };
@@ -192,7 +192,7 @@ function AddTeachingPeriodForm() {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else {
-                setErrMsg(err.response?.message);
+                setErrMsg(err.message);
             }
         }
     };
@@ -269,7 +269,7 @@ function TasksForm() {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else {
-                setErrMsg(err.response?.message);
+                setErrMsg(err.message);
             }
         }
     };
@@ -321,7 +321,7 @@ function GradeForm() {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else {
-                setErrMsg(err.response?.message);
+                setErrMsg(err.message);
             }
         }
     };

@@ -26,7 +26,7 @@ function StudentsGrades() {
                 if (!err?.response) {
                     setErrMsg('No Server Response');
                 } else {
-                    setErrMsg(err.response?.message);
+                    setErrMsg(err.message);
                 }
             }
         }
@@ -39,7 +39,7 @@ function StudentsGrades() {
                 if (!err?.response) {
                     setErrMsg('No Server Response');
                 } else {
-                    setErrMsg(err.response?.message);
+                    setErrMsg(err.message);
                 }
             }
         }
