@@ -26,7 +26,7 @@ function All() {
         const getUsers = async () => {
             try {
                 const response = await axiosPrivate.get(`/users`);
-                isMounted && setUsers(response.data.filter((user) => user !== 'ROLE_ADMINISTRATOR'));
+                isMounted && setUsers(response.data.filter((user) => user.role !== 'ROLE_ADMINISTRATOR'));
             } catch (err) {
                 if (!err?.response) {
                     setErrMsg('No Server Response');
@@ -85,7 +85,7 @@ function AssignToSubject() {
         const getUsers = async () => {
             try {
                 const response = await axiosPrivate.get(`users`);
-                isMounted && setUsers(response.data.filter((user) => user !== 'ROLE_ADMINISTRATOR'));
+                isMounted && setUsers(response.data.filter((user) => user.role !== 'ROLE_ADMINISTRATOR'));
             } catch (err) {
                 if (!err?.response) {
                     setErrMsg('No Server Response');

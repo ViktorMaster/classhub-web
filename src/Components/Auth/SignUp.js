@@ -8,7 +8,7 @@ function SignUp() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const [scsMsg, setScsMsg] = useState('You have successfully signed up!');
+    const [scsMsg, setScsMsg] = useState('');
 
     useEffect(() => {
         setErrMsg('');
