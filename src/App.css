@@ -193,8 +193,13 @@ input[type=radio]:checked {
 }
 
 td, th {
-  max-width: 100px;
-  word-wrap: break-word;
   padding: 5px;
   text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+    td, th {
+        max-width: 100px;
+        word-wrap: break-word;
+    }
 }
