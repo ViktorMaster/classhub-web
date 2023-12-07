@@ -76,7 +76,7 @@ function Tasks() {
                             {isAllowed && <td><Link to={`/subjects/${id}/tasks/${task.id}`} state={task.title}>{task.title}</Link></td>}
                             {!isAllowed && <td>{task.title}</td>}
                             <td>{task.description}</td>
-                            {isStudent && <td>{grades.find((e) => e.taskId === task.id).grade}</td>}
+                            {isStudent && <td>{grades.find((e) => e.taskId === task.id)?.grade}</td>}
                         </tr>
                     ))}
                     </tbody>
