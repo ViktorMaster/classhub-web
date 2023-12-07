@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { AtOutline, LockClosedOutline } from 'react-ionicons';
+import {useState, useEffect} from 'react';
+import {AtOutline, LockClosedOutline} from 'react-ionicons';
 import axios from '../../api/axios';
-import { Link } from 'react-router-dom';
-import { TailSpin } from 'react-loader-spinner'
+import {Link} from 'react-router-dom';
+import {TailSpin} from 'react-loader-spinner'
 
 function SignUp() {
     const [username, setUsername] = useState('');
@@ -33,47 +33,53 @@ function SignUp() {
 
         try {
             await axios.post('/auth/sign-up',
-                                  JSON.stringify({ username: username, pwd: password}),
-                                  {
-                                    headers: { 'Content-Type': 'application/json' }
-                                  });
+                JSON.stringify({username: username, pwd: password}),
+                {
+                    headers: {'Content-Type': 'application/json'}
+                });
             setScsMsg('You have successfully signed up!');
             setUsername('');
             setPassword('');
+
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
-            } else {
+            } else if (err?.response?.message) {
                 setErrMsg(err.response?.message);
+            }else {
+                setErrMsg('A')
             }
         }
+
     };
 
     return (
         <div className='main'>
-        <div className='content'>
-            <section>
-                <form onSubmit={handleSubmit}>
-                    <h1>Sign Up</h1>
-                    <p className={scsMsg ? 'scsmsg' : 'offscreen'}>{scsMsg}</p>
-                    <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
-                    <div className='inputbox'>
-                        <AtOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'} />
-                        <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} required />
-                        <label for=''>Username</label>
-                    </div>
-                    <div className='inputbox'>
-                        <LockClosedOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'} />
-                        <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} required />
-                        <label for=''>Password</label>
-                    </div>
-                    <button>Sign up</button>
-                    <div className='register'>
-                        <p>Already have an account? <Link to='/sign-in'>Sign In</Link></p>
-                    </div>
-                </form>
-            </section>
-        </div>
+            <div className='content'>
+                <section>
+                    <form onSubmit={handleSubmit}>
+                        <h1>Sign Up</h1>
+                        <p className={scsMsg ? 'scsmsg' : 'offscreen'}>{scsMsg}</p>
+                        <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
+                        <div className='inputbox'>
+                            <AtOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'}/>
+                            <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} required/>
+                            <label for=''>Username</label>
+                        </div>
+                        <div className='inputbox'>
+                            <LockClosedOutline className='ion-icon' color={'#000000'} width={'1.4rem'}
+                                               height={'1.4rem'}/>
+                            <input type='password' value={password} onChange={(e) => setPassword(e.target.value)}
+                                   required/>
+                            <label for=''>Password</label>
+                        </div>
+                        <button>Sign up</button>
+                        <div className='register'>
+                            <p>Already have an account? <Link to='/sign-in'>Sign In</Link></p>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </div>
     );
 };
