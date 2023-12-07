@@ -46,8 +46,8 @@ function SignUp() {
                 setErrMsg('No Server Response');
             } else if (err?.response?.message) {
                 setErrMsg(err.response?.message);
-            }else {
-                setErrMsg('A')
+            } else {
+                setErrMsg(`Code: ${err.response?.code}`)
             }
         }
 
