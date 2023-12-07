@@ -20,6 +20,7 @@ const ROLES = {
 function App() {
   return (
     <Routes>
+        <Route path='*' element={<SignIn />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
 
@@ -32,7 +33,8 @@ function App() {
 
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Teacher]} />} >
             <Route element={<Layout />} >
-                <Route path='/subjects/:id/tasks/:taskId' element={<StudentsGrades />} / >
+                <Route path='/subjects/:id/tasks/:taskId/' element={<StudentsGrades />} / >
+                <Route path='/subjects/:id/tasks/:taskId/:studentId' element={<Form to='grade' />} / >
                 <Route path='/subjects/:id/tasks/add' element={<Form to='tasks' />} / >
             </Route>
         </Route>

@@ -12,16 +12,26 @@ body{
     display: flex;
     flex-direction: row;
     min-height: 100vh;
+    width: 100vw;
+}
+table {
+    width: 100%;
 }
 .horizontalBlock {
     display: flex;
     flex-direction: row;
 }
+.mobile-header svg {
+    position: relative;
+    top: 10%;
+    padding: 4px;
+    border-radius: 15px;
+}
 .sidebar {
     display: flex;
     flex-direction: column;
     padding: 10px;
-    width: 4vw;
+    width: 70px;
     height: 100vh;
     background-color: #f0f0f0;
 }
@@ -42,7 +52,7 @@ hr {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 96vw;
+    width: 100%;
     min-height: 100vh;
 }
 section{
@@ -132,6 +142,15 @@ button:hover{
     padding: 0.5rem;
     margin-top: 0.5rem;
 }
+.scsmsg {
+    background-color: lightgreen;
+    border-radius: 40px;
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
 .offscreen {
     display: none;
 }
@@ -174,6 +193,8 @@ input[type=radio]:checked {
 }
 
 td, th {
+  max-width: 100px;
+  word-wrap: break-word;
   padding: 5px;
   text-align: center;
 }

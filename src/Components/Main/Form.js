@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 function Form ({ to }) {
     return (
         <div>
+            { to === 'grade' && <GradeForm />}
             { to === 'tasks' && <TasksForm /> }
             { to === 'teachingSubject' && <TeachingSubjectForm /> }
             { to === 'subject' && <AddSubjectForm /> }
@@ -20,9 +21,8 @@ function TeachingSubjectForm() {
     const [currentTeachingPeriod, setCurrentTeachingPeriod] = useState('');
     const [currentSubject, setCurrentSubject] = useState('')
     const [errMsg, setErrMsg] = useState('');
+    const [scsMsg, setScsMsg] = useState('');
     const axiosPrivate = useAxiosPrivate();
-    const navigate = useNavigate();
-    const location = useLocation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,6 +31,7 @@ function TeachingSubjectForm() {
                 JSON.stringify({ subjectId: currentSubject, teachingPeriodId: currentTeachingPeriod }));
             setCurrentSubject('');
             setCurrentTeachingPeriod('');
+            setScsMsg('You have created a teaching subject!');
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -39,6 +40,10 @@ function TeachingSubjectForm() {
             }
         }
     };
+
+    useEffect(() => {
+        document.title = "Add teaching subject";
+    }, []);
 
     useEffect(() => {
         let isMounted = true;
@@ -50,7 +55,11 @@ function TeachingSubjectForm() {
                 setTeachingPeriods(responseTeachingPeriods.data);
                 setSubjects(responseSubjects.data);
             } catch (err) {
-                navigate('/sign-in', { state: { from: location }, replace: true });
+                if (!err?.response) {
+                    setErrMsg('No Server Response');
+                } else {
+                    setErrMsg(err.response?.message);
+                }
             }
         }
 
@@ -63,7 +72,8 @@ function TeachingSubjectForm() {
     return (
         <section>
             <form onSubmit={handleSubmit}>
-                <h1>Add subject</h1>
+                <h1>Add teaching subject</h1>
+                <p className={scsMsg ? 'scsmsg' : 'offscreen'}>{scsMsg}</p>
                 <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
                 <div className="form-row">
                     <select style={{'marginTop': '20px'}} name="Teaching periods" onChange={(e) => setCurrentTeachingPeriod(e.target.value)}>
@@ -95,7 +105,12 @@ function AddSubjectForm() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [errMsg, setErrMsg] = useState('');
+    const [scsMsg, setScsMsg] = useState('');
     const axiosPrivate = useAxiosPrivate();
+
+    useEffect(() => {
+        document.title = "Add subject";
+    }, []);
 
     useEffect(() => {
         setErrMsg('');
@@ -107,6 +122,7 @@ function AddSubjectForm() {
             await axiosPrivate.post('/subjects',JSON.stringify({ name, description }));
             setName('');
             setDescription('');
+            setScsMsg('You have created a subject!');
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -120,6 +136,7 @@ function AddSubjectForm() {
         <section>
             <form onSubmit={handleSubmit}>
                 <h1>Add Subject</h1>
+                <p className={scsMsg ? 'scsmsg' : 'offscreen'}>{scsMsg}</p>
                 <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
                 <div className='inputbox'>
                     <input type='text' value={name} onChange={(e) => setName(e.target.value)} required />
@@ -139,19 +156,38 @@ function AddTeachingPeriodForm() {
     const [year, setYear] = useState('');
     const [selectedSemester, setSelectedSemester] = useState('');
     const [errMsg, setErrMsg] = useState('');
+    const [scsMsg, setScsMsg] = useState('');
     const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
+        document.title = "Add teaching period";
+    }, []);
+
+    useEffect(() => {
         setErrMsg('');
+        setScsMsg('');
     }, [year, selectedSemester]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        var currentYear = new Date().getFullYear();
+
+        if (isNaN(year)) {
+            setErrMsg('Year must be a number');
+            return;
+        }
+
+        if (year < currentYear) {
+            setErrMsg('Enter current or next years')
+            return;
+        }
+
         try {
             await axiosPrivate.post('/teaching-periods',JSON.stringify({ year: year, semester: selectedSemester }));
             setYear('');
             setSelectedSemester('');
+            setScsMsg('You have created a teaching period!')
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -165,6 +201,7 @@ function AddTeachingPeriodForm() {
         <section>
             <form onSubmit={handleSubmit}>
                 <h1>Add teaching period</h1>
+                <p className={scsMsg ? 'scsmsg' : 'offscreen'}>{scsMsg}</p>
                 <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
                 <div className='inputbox'>
                     <input type='number' value={year} onChange={(e) => setYear(e.target.value)} required />
@@ -208,11 +245,17 @@ function TasksForm() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [errMsg, setErrMsg] = useState('');
+    const [scsMsg, setScsMsg] = useState('');
     const axiosPrivate = useAxiosPrivate();
     const { id } = useParams();
 
     useEffect(() => {
+        document.title = "Add task";
+    }, []);
+
+    useEffect(() => {
         setErrMsg('');
+        setScsMsg('');
     }, [title, description]);
 
     const handleSubmit = async (e) => {
@@ -221,6 +264,7 @@ function TasksForm() {
             await axiosPrivate.post('/tasks',JSON.stringify({ title, description, teachingSubjectId: id }));
             setTitle('');
             setDescription('');
+            setScsMsg('You have created a task!');
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -233,7 +277,8 @@ function TasksForm() {
     return (
         <section>
             <form onSubmit={handleSubmit}>
-                <h1>Add Subject</h1>
+                <h1>Add task</h1>
+                <p className={scsMsg ? 'scsmsg' : 'offscreen'}>{scsMsg}</p>
                 <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
                 <div className='inputbox'>
                     <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} required />
@@ -242,6 +287,52 @@ function TasksForm() {
                 <div className='inputbox'>
                     <input type='text' value={description} onChange={(e) => setDescription(e.target.value)} required />
                     <label for=''>Description</label>
+                </div>
+                <button>Add</button>
+            </form>
+        </section>
+    );
+}
+
+function GradeForm() {
+    const [grade, setGrade] = useState();
+    const [errMsg, setErrMsg] = useState('');
+    const axiosPrivate = useAxiosPrivate();
+    const { taskId, studentId } = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = "Add grade";
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (grade < 0) {
+            setErrMsg('Grade must be a not-negative number')
+        }
+
+        try {
+            await axiosPrivate.post('/grades', JSON.stringify({ grade, taskId, studentId }));
+            setGrade('');
+            navigate(-1);
+        } catch (err) {
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else {
+                setErrMsg(err.response?.message);
+            }
+        }
+    };
+
+    return (
+        <section>
+            <form onSubmit={handleSubmit}>
+                <h1>Grade</h1>
+                <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
+                <div className='inputbox'>
+                    <input type='number' value={grade} onChange={(e) => setGrade(e.target.value)} required />
+                    <label for=''>Grade</label>
                 </div>
                 <button>Add</button>
             </form>

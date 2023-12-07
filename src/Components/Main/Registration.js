@@ -7,11 +7,16 @@ function Registration() {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
     const [errMsg, setErrMsg] = useState('');
+    const [scsMsg, setScsMsg] = useState('');
     const axiosPrivate = useAxiosPrivate();
 
+    useEffect(() => {
+        document.title = "Registration";
+    }, []);
 
     useEffect(() => {
         setErrMsg('');
+        setScsMsg('');
     }, [username, password]);
 
     const handleSubmit = async (e) => {
@@ -25,6 +30,7 @@ function Registration() {
             setUsername('');
             setPassword('');
             setRole('');
+            setScsMsg('You have registered a new user!!!');
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -39,6 +45,7 @@ function Registration() {
         <section>
             <form onSubmit={handleSubmit}>
                 <h1>Register user</h1>
+                <p className={scsMsg ? 'scsmsg' : 'offscreen'}>{scsMsg}</p>
                 <p className={errMsg ? 'errmsg' : 'offscreen'}>{errMsg}</p>
                 <div className='inputbox'>
                     <AtOutline className='ion-icon' color={'#000000'} width={'1.4rem'} height={'1.4rem'} />

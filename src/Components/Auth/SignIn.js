@@ -43,6 +43,7 @@ function SignIn() {
     };
 
     return (
+        <div className='main'>
         <div className='content'>
             <section>
                 <form onSubmit={handleSubmit}>
@@ -64,6 +65,7 @@ function SignIn() {
                     </div>
                 </form>
             </section>
+        </div>
         </div>
     );
 };
