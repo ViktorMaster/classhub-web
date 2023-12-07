@@ -75,7 +75,9 @@ function AssignToSubject() {
     const axiosPrivate = useAxiosPrivate();
     const [selectedIds, setSelectedIds] = useState([]);
     const [errMsg, setErrMsg] = useState('');
+    const [scsMsg, setScsMsg] = useState('');
     const { id } = useParams();
+    const location = useLocation();
 
     useEffect(() => {
         let isMounted = true;

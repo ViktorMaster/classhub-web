@@ -32,11 +32,11 @@ function SignUp() {
         }
 
         try {
-            const response = await axios.post('/auth/sign-up',
-                                              JSON.stringify({ username: username, pwd: password}),
-                                              {
-                                                headers: { 'Content-Type': 'application/json' }
-                                              });
+            await axios.post('/auth/sign-up',
+                                  JSON.stringify({ username: username, pwd: password}),
+                                  {
+                                    headers: { 'Content-Type': 'application/json' }
+                                  });
             setScsMsg('You have successfully signed up!');
             setUsername('');
             setPassword('');

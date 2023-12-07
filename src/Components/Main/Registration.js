@@ -23,9 +23,9 @@ function Registration() {
         e.preventDefault();
         try {
             if (role === 'ROLE_STUDENT') {
-                const response = await axiosPrivate.post('/admins/sign-student', JSON.stringify({ username: username, pwd: password }));
+                await axiosPrivate.post('/admins/sign-student', JSON.stringify({ username: username, pwd: password }));
             } else {
-                const response = await axiosPrivate.post('/admins/sign-teacher', JSON.stringify({ username: username, pwd: password }));
+                await axiosPrivate.post('/admins/sign-teacher', JSON.stringify({ username: username, pwd: password }));
             }
             setUsername('');
             setPassword('');

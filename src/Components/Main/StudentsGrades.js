@@ -52,20 +52,6 @@ function StudentsGrades() {
         }
     }, []);
 
-    const updateGradeById = (id, newGrade) => {
-        setGrades(prevGrades =>
-            prevGrades.map(grade =>
-                grade.id === id ? { ...grade, grade: newGrade } : grade
-            )
-        )
-    };
-
-    const handleInputChange = async (event, gradeId) => {
-        const newGrade = event.target.value;
-        updateGradeById(gradeId, newGrade);
-
-    };
-
     return (
         <section>
             <div className='container'>

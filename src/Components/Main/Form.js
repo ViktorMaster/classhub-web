@@ -53,7 +53,7 @@ function TeachingSubjectForm() {
                 const responseTeachingPeriods = await axiosPrivate.get(`/teaching-periods`);
                 const responseSubjects = await axiosPrivate.get(`/subjects`);
                 setTeachingPeriods(responseTeachingPeriods.data);
-                setSubjects(responseSubjects.data);
+                isMounted && setSubjects(responseSubjects.data);
             } catch (err) {
                 if (!err?.response) {
                     setErrMsg('No Server Response');
